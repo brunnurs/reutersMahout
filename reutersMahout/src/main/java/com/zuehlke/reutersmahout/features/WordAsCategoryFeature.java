@@ -1,5 +1,6 @@
 package com.zuehlke.reutersmahout.features;
 
+import java.io.IOException;
 import java.io.StringReader;
 
 import org.apache.lucene.analysis.Analyzer;
@@ -15,20 +16,24 @@ import org.apache.mahout.vectorizer.encoders.StaticWordValueEncoder;
 
 public class WordAsCategoryFeature implements Feature {
 
-	public double extract(String text, Vector vector) {
+	public void extract( String text, Vector vector ) {
 		FeatureVectorEncoder encoder = new AdaptiveWordValueEncoder("text");
 		Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_31);     
 
-		StringReader in = new StringReader("text to magically vectorize");
+		StringReader in = new StringReader( text );
 		TokenStream ts = analyzer.tokenStream("body", in);
 		TermAttribute termAtt = ts.addAttribute(TermAttribute.class);
 
-		Vector v1 = new RandomAccessSparseVector(100);                   
-		while (ts.incrementToken()) {
-		  char[] termBuffer = termAtt.termBuffer();
-		  int termLen = termAtt.termLength();
-		  String w = new String(termBuffer, 0, termLen);                 
-		  encoder.addToVector(w, 1, v1);                                 
+		try {
+			while (ts.incrementToken()) {
+			  char[] termBuffer = termAtt.termBuffer();
+			  int termLen = termAtt.termLength();
+			  String w = new String(termBuffer, 0, termLen);                 
+			  encoder.addToVector(w, 1, vector);                                 
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
 	}
