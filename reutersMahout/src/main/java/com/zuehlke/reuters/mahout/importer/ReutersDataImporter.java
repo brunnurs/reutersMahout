@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -11,9 +13,10 @@ import javax.xml.parsers.SAXParserFactory;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
+
+import com.zuehlke.reuters.mahout.ReutersMessage;
 
 
 
@@ -33,7 +36,7 @@ public class ReutersDataImporter extends DefaultHandler
 
 	private static void createDataImporter(XMLReader xmlReader)
 			throws IOException, SAXException, FileNotFoundException {
-		ReutersDataImporterTest importer = new ReutersDataImporterTest();
+		ReutersDataImporter importer = new ReutersDataImporter();
 //		xmlReader.setContentHandler(importer);
 //		xmlReader.setErrorHandler(importer);
 	}
@@ -81,5 +84,9 @@ public class ReutersDataImporter extends DefaultHandler
 
 	public void endDocument()
 	{
+	}
+
+	public List<ReutersMessage> parseData(String inputAsString) {
+		return new ArrayList<ReutersMessage>();
 	}
 }
