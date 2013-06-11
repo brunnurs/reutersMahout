@@ -5,4 +5,17 @@
   <version>0.0.1-SNAPSHOT</version>
   <name>reutersmahout</name>
   <description>see github</description>
+  
+  <properties>
+    <mahout.version>0.7</mahout.version>
+    <mahout.groupid>org.apache.mahout</mahout.groupid>
+  </properties>
+  
+  <dependencies>
+    <dependency>
+      <groupId>${mahout.groupid}</groupId>
+      <artifactId>mahout-core</artifactId>
+      <version>${mahout.version}</version>
+    </dependency>
+  </dependencies>
 </project>
