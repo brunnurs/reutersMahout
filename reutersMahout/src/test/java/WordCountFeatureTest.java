@@ -4,7 +4,7 @@ import org.apache.mahout.math.RandomAccessSparseVector;
 import org.apache.mahout.math.Vector;
 import org.junit.Test;
 
-import com.zuehlke.reutersmahout.features.WordCountFeature;
+import com.zuehlke.reuters.mahout.features.WordCountFeature;
 
 
 public class WordCountFeatureTest {
