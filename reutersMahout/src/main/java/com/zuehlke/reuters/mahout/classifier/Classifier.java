@@ -1,12 +1,11 @@
 package com.zuehlke.reuters.mahout.classifier;
 
-import java.util.List;
+import java.io.IOException;
 
 import org.apache.mahout.math.Vector;
 
-import com.zuehlke.reuters.mahout.DataPoint;
-
 public interface Classifier {
-	public void train(List<DataPoint> trainingData);
-	public String classify(Vector features);
+	String classify(Vector features);
+	void safeToFile(String path)  throws IOException;
+	void train();
 }

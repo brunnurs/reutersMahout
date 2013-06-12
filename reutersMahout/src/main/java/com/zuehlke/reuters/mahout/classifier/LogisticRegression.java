@@ -1,11 +1,12 @@
 package com.zuehlke.reuters.mahout.classifier;
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.mahout.classifier.sgd.L1;
+import org.apache.mahout.classifier.sgd.ModelSerializer;
 import org.apache.mahout.classifier.sgd.OnlineLogisticRegression;
 import org.apache.mahout.math.Vector;
 
@@ -15,11 +16,11 @@ public class LogisticRegression implements Classifier {
 
 	private OnlineLogisticRegression learningAlgorithm;
 	private List<String> categories;
+	private List<DataPoint> trainingData;
 	
-	@Override
-	public void train(List<DataPoint> trainingData) {
+	public LogisticRegression(List<DataPoint> trainingData){
+		this.trainingData = trainingData;
 		extractCategories(trainingData);
-		
 		learningAlgorithm =
 				new OnlineLogisticRegression(
 				categories.size(), trainingData.size(), new L1())
@@ -27,7 +28,14 @@ public class LogisticRegression implements Classifier {
 				.decayExponent(0.9)
 				.lambda(3.0e-5)
 				.learningRate(20);
-		
+	}
+	
+	private LogisticRegression(OnlineLogisticRegression learningAlgorithm){
+		this.learningAlgorithm = learningAlgorithm;
+	}
+	
+	@Override
+	public void train() {
 		for(DataPoint dataPoint : trainingData){
 			int category = categories.indexOf(dataPoint.getCategory());
 			learningAlgorithm.train(category, dataPoint.getFeatures());
@@ -49,4 +57,14 @@ public class LogisticRegression implements Classifier {
 		return categories.get(classify.maxValueIndex());
 	}
 
+	@Override
+	public void safeToFile(String path) throws IOException {
+		ModelSerializer.writeBinary(path, learningAlgorithm);
+	}
+
+	public static Classifier loadFromFile(String path) throws IOException {
+		OnlineLogisticRegression model = ModelSerializer.readBinary(new FileInputStream(path), OnlineLogisticRegression.class);
+		LogisticRegression classifier = new LogisticRegression(model);
+		return classifier;
+	}
 }

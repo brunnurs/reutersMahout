@@ -13,7 +13,7 @@ import org.apache.mahout.vectorizer.encoders.StaticWordValueEncoder;
 public class NumberCountFeature extends AbstractFeature {
 
 	public void extract(String text, Vector vector) {
-		FeatureVectorEncoder encoder = new StaticWordValueEncoder("text");
+		FeatureVectorEncoder encoder = new StaticWordValueEncoder("numberCount");
 
 		StringReader in = new StringReader(text);
 		TokenStream ts = analyzer.tokenStream("body", in);
@@ -32,14 +32,6 @@ public class NumberCountFeature extends AbstractFeature {
 		} catch (IOException e) {
 			System.out.println("IOError: " + NumberCountFeature.class);
 		}
-	}
-
-	private boolean isNumeric(char[] word) {
-		for (char c : word) {
-			if (c != 0 && !Character.isDigit(c))
-				return false;
-		}
-		return true;
 	}
 
 }
