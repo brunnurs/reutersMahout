@@ -1,20 +1,27 @@
 package com.zuehlke.reuters.mahout.features;
-import static org.junit.Assert.*;
+
+import static org.junit.Assert.assertEquals;
 
 import org.apache.mahout.math.RandomAccessSparseVector;
 import org.apache.mahout.math.Vector;
 import org.junit.Test;
 
-import com.zuehlke.reuters.mahout.features.WordCountFeature;
-
-
 public class NumberCountFeatureTest {
 
 	@Test
-	public void test() {
-		WordCountFeature wordCountFeature = new WordCountFeature();
-		Vector v1 = new RandomAccessSparseVector(10);                   
-		wordCountFeature.extract("two words", v1);
+	public void testTextWithNoNumbers() {
+		NumberCountFeature feature = new NumberCountFeature();
+		Vector v1 = new RandomAccessSparseVector(10);
+		feature.extract("to to two words", v1);
+		assertEquals("{}", v1.toString());
+	}
+
+	@Test
+	public void testTextWithNumbers() {
+		NumberCountFeature feature = new NumberCountFeature();
+		Vector v1 = new RandomAccessSparseVector(10);
+		feature.extract("to 23 two     56 words", v1);
+		assertEquals("{4:1.0,3:1.0,2:1.0,0:1.0}", v1.toString());
 	}
 
 }

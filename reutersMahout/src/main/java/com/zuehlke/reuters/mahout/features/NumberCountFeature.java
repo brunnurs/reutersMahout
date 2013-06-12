@@ -2,12 +2,10 @@ package com.zuehlke.reuters.mahout.features;
 
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.Iterator;
 
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.TermAttribute;
 import org.apache.lucene.analysis.tokenattributes.TypeAttribute;
-import org.apache.lucene.util.AttributeImpl;
 import org.apache.mahout.math.Vector;
 import org.apache.mahout.vectorizer.encoders.FeatureVectorEncoder;
 import org.apache.mahout.vectorizer.encoders.StaticWordValueEncoder;
@@ -24,23 +22,24 @@ public class NumberCountFeature extends AbstractFeature {
 		try {
 			while (ts.incrementToken()) {
 				TypeAttribute type = ts.getAttribute(TypeAttribute.class);
-				if (type!=null && "<NUM>".equals(type.type())) {
+				if (type != null && "<NUM>".equals(type.type())) {
 					char[] termBuffer = termAtt.termBuffer();
 					int termLen = termAtt.termLength();
-					String w = new String(termBuffer, 0, termLen);                 
-					encoder.addToVector(w, 1, vector);                                 
+					String w = new String(termBuffer, 0, termLen);
+					encoder.addToVector(w, 1, vector);
 				}
 			}
 		} catch (IOException e) {
 			System.out.println("IOError: " + NumberCountFeature.class);
 		}
 	}
-	
+
 	private boolean isNumeric(char[] word) {
-	    for (char c : word) {
-	        if (c!=0 && !Character.isDigit(c)) return false;
-	    }
-	    return true;
+		for (char c : word) {
+			if (c != 0 && !Character.isDigit(c))
+				return false;
+		}
+		return true;
 	}
 
 }
