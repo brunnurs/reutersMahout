@@ -1,9 +1,10 @@
 package com.zuehlke.reuters.mahout.importer;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
 
-import junit.framework.Assert;
+import static org.junit.Assert.assertEquals;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.List;
 
 import org.junit.Test;
 
@@ -11,18 +12,19 @@ import com.zuehlke.reuters.mahout.ReutersMessage;
 
 public class ReutersDataImporterTest {
 
-	ReutersDataImporter importer = new ReutersDataImporter();
-
 	@Test
-	public void testImportReutersSample() throws IOException, ParseException {
+	public void testImportReutersMultipleSamples()
+			throws FileNotFoundException, ParseException {
 
 		/* prepare */
-		InputStream resourceAsStream = getClass().getResourceAsStream("/reutersDataExample.xml");
-		
+		File dir = new File("target/test-classes");
+		ReutersMessageImporter importer = new ReutersMessageImporter();
+
 		/* perform */
-		List<ReutersMessage> parsedMessages = importer.parseData(resourceAsStream);
-		
+		List<ReutersMessage> parsedMessages = importer.importData(dir);
+
 		/* validate */
-		Assert.assertEquals(1,parsedMessages.size());
+		assertEquals(2, parsedMessages.size());
+
 	}
 }
