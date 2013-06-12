@@ -2,20 +2,34 @@ package com.zuehlke.reuters.mahout;
 
 public class ReutersMessage {
 
+	private String id;
 	private String topic;
-	private String message;
+	private String body;
 	
+	
+	public ReutersMessage(String messageId, String topic,
+			String body) {
+				this.id = messageId;
+				this.topic = topic;
+				this.body = body;
+	}
+
 	public String getTopic() {
 		return topic;
 	}
 	public void setTopic(String topic) {
 		this.topic = topic;
 	}
-	public String getMessage() {
-		return message;
+	public String getBody() {
+		return body;
 	}
-	public void setMessage(String message) {
-		this.message = message;
+	public void setBody(String message) {
+		this.body = message;
 	}
-	
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
 }
