@@ -26,4 +26,8 @@ public class FeatureCollector {
 		}
 		return vector;
 	}
+	
+	public int getFeatureCount() {
+		return VECTOR_SIZE;
+	}
 }
