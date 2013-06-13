@@ -25,7 +25,7 @@ public class ClassifierBolt extends BaseRichBolt {
 	public void prepare(@SuppressWarnings("rawtypes") Map stormConf, TopologyContext context, OutputCollector collector) {
 		this.collector = collector;
 		try {
-			classifier = LogisticRegression.loadFromFile("/home/cloudera/models");
+			classifier = LogisticRegression.loadFromFile("/home/cloudera/workspace/reuters/reutersMahout/models");
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		} catch (ClassNotFoundException e) {

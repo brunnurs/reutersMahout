@@ -41,7 +41,11 @@ public class ReutersTopology {
 		config.setNumWorkers(2);
 		config.setMaxSpoutPending(1);
 		LocalCluster cluster = new LocalCluster();
+<<<<<<< HEAD
 		cluster.submitTopology("reutersTopology", config, buildRawDataTopology(new File("/home/cloudera/workspace/reutersMahout/Data")));
+=======
+		cluster.submitTopology("reutersTopology", config, buildTopology(new File("/tmp/reuters21578-out")));
+>>>>>>> 3426d2ed542c883440138652dff51b72005b3bbc
 		Utils.sleep(10000);
 		cluster.killTopology("reutersTopology");
         cluster.shutdown();
