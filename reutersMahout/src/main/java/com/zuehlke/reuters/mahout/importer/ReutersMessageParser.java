@@ -97,9 +97,11 @@ public class ReutersMessageParser extends DefaultHandler
 
 	private void createNewReutersMessages() {
 		for (String topic : currentTopics) {
-			ReutersMessage reutersMessage = new ReutersMessage(currentMessageId,topic,currentBody);
-			allMessages.add(reutersMessage);
-			statistic.addToStatistics(reutersMessage);
+			if(currentBody != null && !currentBody.isEmpty()) {
+				ReutersMessage reutersMessage = new ReutersMessage(currentMessageId,topic,currentBody);
+				allMessages.add(reutersMessage);
+				statistic.addToStatistics(reutersMessage);				
+			}
 		}
 	}
 
