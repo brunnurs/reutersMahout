@@ -7,7 +7,7 @@ import org.apache.mahout.math.RandomAccessSparseVector;
 import org.apache.mahout.math.Vector;
 
 public class FeatureCollector {
-	private static final int VECTOR_SIZE = 1000;
+	public static final int VECTOR_SIZE = 1000;
 	private static Set<Feature> features = new HashSet<Feature>();
 	
 	static{

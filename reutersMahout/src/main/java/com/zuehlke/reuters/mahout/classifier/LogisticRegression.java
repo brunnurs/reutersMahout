@@ -11,6 +11,7 @@ import org.apache.mahout.classifier.sgd.OnlineLogisticRegression;
 import org.apache.mahout.math.Vector;
 
 import com.zuehlke.reuters.mahout.DataPoint;
+import com.zuehlke.reuters.mahout.features.FeatureCollector;
 
 public class LogisticRegression implements Classifier {
 
@@ -23,7 +24,7 @@ public class LogisticRegression implements Classifier {
 		extractCategories(trainingData);
 		learningAlgorithm =
 				new OnlineLogisticRegression(
-				categories.size(), trainingData.size(), new L1())
+				categories.size(), FeatureCollector.VECTOR_SIZE, new L1())
 				.alpha(1).stepOffset(1000)
 				.decayExponent(0.9)
 				.lambda(3.0e-5)
