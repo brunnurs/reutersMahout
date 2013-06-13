@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.mahout.math.Vector;
 
@@ -25,13 +26,14 @@ public class ReutersTrainer {
 		}
 
 		List<ReutersMessage> messages = new MessageExtractor().extract(dataDir);
-		Map<String, List<String>> categoryWords = new WordCategoryMapper().map(messages);
+		Map<String, Set<String>> categoryWords = new WordCategoryMapper().map(messages);
 
 		System.out.println("-- Extract features");
+		FeatureCollector featureCollector = new FeatureCollector(categoryWords);
 		List<DataPoint> trainingData = new ArrayList<DataPoint>();
 		for (ReutersMessage message : messages) {
 			if (!message.getTopic().isEmpty() && message.getBody() != null) {
-				Vector features = new FeatureCollector(categoryWords).extractFeatures(message);
+				Vector features = featureCollector.extractFeatures(message);
 				trainingData.add(new DataPoint(features, message.getTopic()));
 			}
 		}

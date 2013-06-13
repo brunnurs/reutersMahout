@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 
 import org.apache.mahout.classifier.ConfusionMatrix;
 import org.apache.mahout.math.Vector;
@@ -49,7 +50,7 @@ public class CrossValidator {
 				new Object[] { validationDataPercentage, messages.size(),
 						validationDataSize, runs });
 
-		Map<String, List<String>> categoryWords = new WordCategoryMapper()
+		Map<String, Set<String>> categoryWords = new WordCategoryMapper()
 				.map(messages);
 		FeatureCollector featureCollector = new FeatureCollector(categoryWords);
 		for (ReutersMessage message : messages) {

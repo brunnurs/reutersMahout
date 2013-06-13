@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.TermAttribute;
@@ -15,9 +16,9 @@ import com.zuehlke.reuters.mahout.ReutersMessage;
 
 public class WordCountFeature extends AbstractFeature {
 
-	private Map<String, List<String>> categoryWords;
+	private Map<String, Set<String>> categoryWords;
 
-	public WordCountFeature(Map<String, List<String>> categoryWords) {
+	public WordCountFeature(Map<String, Set<String>> categoryWords) {
 		this.categoryWords = categoryWords;
 	}
 
@@ -29,7 +30,7 @@ public class WordCountFeature extends AbstractFeature {
 		TermAttribute termAtt = ts.addAttribute(TermAttribute.class);
 
 		String category = message.getTopic();
-		List<String> topWords = categoryWords.get(category);
+		Set<String> topWords = categoryWords.get(category);
 		try {
 			while (ts.incrementToken()) {
 			  char[] termBuffer = termAtt.termBuffer();

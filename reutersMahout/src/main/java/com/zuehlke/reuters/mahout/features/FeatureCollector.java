@@ -13,14 +13,13 @@ import com.zuehlke.reuters.mahout.ReutersMessage;
 public class FeatureCollector {
 	public static final int VECTOR_SIZE = 1000;
 	private static Set<Feature> features = new HashSet<Feature>();
-	private static Map<String, List<String>> categoryWords;
 	
-	public FeatureCollector(Map<String, List<String>> categoryWords){
+	public FeatureCollector(Map<String, Set<String>> categoryWords){
 		features.add( new NumberCountFeature() );
 		features.add( new WordCountFeature(categoryWords) );
 		features.add( new BiasFeature() );
 		features.add( new CurrencyCountFeature() );
-//		features.add( new AdaptativeWordCountFeature() );
+		features.add( new AdaptativeWordCountFeature() );
 	}
 	
 	public Vector extractFeatures(ReutersMessage message){

@@ -4,12 +4,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.StringTokenizer;
 
 import com.google.common.collect.Maps;
@@ -19,7 +21,7 @@ public class WordCategoryMapper {
 	
 	private static final int NUMBER_TOP_WORDS = 25;
 
-	public Map<String, List<String>> map(List<ReutersMessage> messages) {
+	public Map<String, Set<String>> map(List<ReutersMessage> messages) {
 		Map<String, Map<String, Integer>> tmpMap = Maps.newHashMap();
 
 		for (ReutersMessage msg : messages) {
@@ -42,7 +44,7 @@ public class WordCategoryMapper {
 			}
 		}
 
-		HashMap<String, List<String>> topMap = Maps.newHashMap();
+		HashMap<String, Set<String>> topMap = Maps.newHashMap();
 		for (String category : tmpMap.keySet()) {
 			Map<String, Integer> unorderedMap = tmpMap.get(category);
 			Map<String, Integer> sortedMap = sort(unorderedMap);
@@ -52,8 +54,8 @@ public class WordCategoryMapper {
 		return topMap;
 	}
 
-	private List<String> extractList(Map<String, Integer> sortedMap) {
-		List<String> list = new ArrayList<String>();
+	private Set<String> extractList(Map<String, Integer> sortedMap) {
+		Set<String> list = new HashSet<String>();
 		
 		List<Entry<String, Integer>> sortedList = new ArrayList<Entry<String, Integer>>(sortedMap.entrySet());
 		int count = NUMBER_TOP_WORDS;
