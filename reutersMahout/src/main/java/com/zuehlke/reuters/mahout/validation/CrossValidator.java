@@ -59,12 +59,26 @@ public class CrossValidator {
 			}
 		}
 
+		
+		List<List<DataPoint>> validationDataSets = new ArrayList<List<DataPoint>>();
+		List<DataPoint> trainingData = new ArrayList<DataPoint>(data);
+		Random random = new Random();
+		for (int r = 0; r < runs; r++) {
+			List<DataPoint> validationData = new ArrayList<DataPoint>();
+			for (int v = 0; v < validationDataSize; v++) {
+				int index = random.nextInt(trainingData.size());
+				validationData.add(trainingData.remove(index));
+			}
+			validationDataSets.add(validationData);
+			LOG.info("ValidationData size={}", validationData.size());
+		}
+		
 		List<String> categories = new CategoriesExtractor().extract(data);
 		ConfusionMatrix overallMatrix = new ConfusionMatrix(categories,
 				"unknown");
 		List<ConfusionMatrix> confusionMatrixes = new ArrayList<ConfusionMatrix>();
-		for (int i = 0; i < runs; i++) {
-			confusionMatrixes.add(execute(data, validationDataSize, i,
+		for (List<DataPoint> validationDataSet : validationDataSets) {
+			confusionMatrixes.add(execute(data, validationDataSet,
 					categories, overallMatrix));
 		}
 
@@ -81,21 +95,11 @@ public class CrossValidator {
 	}
 
 	private ConfusionMatrix execute(List<DataPoint> data,
-			int validationDataSize, int run, List<String> categories,
+			List<DataPoint> validationDataSet, List<String> categories,
 			ConfusionMatrix overallMatrix) {
-		int validationDataStart = validationDataSize * run;
-		int validationDataEnd = validationDataSize * (run + 1);
-		LOG.info("Run {}. Validation data {}-{}", new Object[] { run,
-				validationDataStart, validationDataEnd });
-		Random r = new Random();
 		List<DataPoint> trainingData = new ArrayList<DataPoint>(data);
-		List<DataPoint> validationData = new ArrayList<DataPoint>();
-		for (int i = 0; i < validationDataSize; i++) {
-			int index = r.nextInt(trainingData.size());
-			validationData.add(trainingData.remove(index));
-		}
-		LOG.info("trainingData={}, validationData={}", trainingData.size(),
-				validationData.size());
+		trainingData.removeAll(validationDataSet);
+		LOG.info("Training dataset={}, validaton dataset={}", trainingData.size(), validationDataSet.size());
 		Classifier classifier = new LogisticRegression(trainingData);
 		LOG.info("Starting training.");
 		classifier.train();
@@ -104,7 +108,7 @@ public class CrossValidator {
 		ConfusionMatrix confusionMatrix = new ConfusionMatrix(categories,
 				"unknown");
 		LOG.info("");
-		for (DataPoint dp : validationData) {
+		for (DataPoint dp : validationDataSet) {
 			String expectedTarget = dp.getCategory();
 			String actualTarget = classifier.classify(dp.getFeatures());
 			confusionMatrix.addInstance(expectedTarget, actualTarget);
