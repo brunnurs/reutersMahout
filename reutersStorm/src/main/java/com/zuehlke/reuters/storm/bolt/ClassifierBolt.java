@@ -36,7 +36,7 @@ public class ClassifierBolt extends BaseRichBolt {
 
 	public void execute(Tuple input) {
 		String text = input.getString(1);
-		FeatureCollector featureCollector = new FeatureCollector();
+		FeatureCollector featureCollector = new FeatureCollector(null);
 		Vector featureVector = featureCollector.extractFeatures(text);
 		String textClass = classifier.classify(featureVector);
 		collector.emit(new Values(input.getString(0), textClass, input.getString(2)));
