@@ -22,7 +22,7 @@ public class ReutersTrainer {
 		FeatureCollector featureCollector = new FeatureCollector();
 		
 		for( ReutersMessage message : messages ){
-			if( !message.getTopic().isEmpty() ){
+			if( !message.getTopic().isEmpty() && message.getBody() != null ){
 				Vector features = featureCollector.extractFeatures( message.getBody() );
 				trainingData.add( new DataPoint(features, message.getTopic()));
 			}

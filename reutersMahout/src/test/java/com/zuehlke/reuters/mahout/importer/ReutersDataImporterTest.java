@@ -17,7 +17,7 @@ public class ReutersDataImporterTest {
 			throws FileNotFoundException, ParseException {
 
 		/* prepare */
-		File dir = new File("target/test-classes");
+		File dir = new File("/tmp/reuters/");
 		ReutersMessageImporter importer = new ReutersMessageImporter();
 
 		/* perform */
