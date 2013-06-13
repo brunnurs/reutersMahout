@@ -17,7 +17,10 @@ public class ReutersTrainer {
 
 	public static void main(String[] args) throws ParseException, IOException {
 		ReutersMessageImporter importer = new ReutersMessageImporter();
+		
 		List<ReutersMessage> messages = importer.importData( new File(args[0]) );
+		importer.printStatistics();
+
 		List<DataPoint> trainingData = new ArrayList<DataPoint>();
 		FeatureCollector featureCollector = new FeatureCollector();
 		
