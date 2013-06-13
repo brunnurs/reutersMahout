@@ -2,6 +2,7 @@ package com.zuehlke.reuters.mahout.validation;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -53,8 +54,7 @@ public class CrossValidator {
 		FeatureCollector featureCollector = new FeatureCollector(categoryWords);
 		for (ReutersMessage message : messages) {
 			if (!message.getTopic().isEmpty() && message.getBody() != null) {
-				Vector features = featureCollector.extractFeatures(message
-						.getBody());
+				Vector features = featureCollector.extractFeatures(message);
 				data.add(new DataPoint(features, message.getTopic()));
 			}
 		}
@@ -91,6 +91,13 @@ public class CrossValidator {
 		 */
 		System.out.println(new ConfusionMatrixFormatter(overallMatrix)
 				.withMatrix().withAccurency());
+		int totalOccurrency = 0;
+		int totalCorrect = 0;
+		for(String label : overallMatrix.getLabels()){
+			totalCorrect += overallMatrix.getCorrect(label);
+			totalOccurrency += overallMatrix.getTotal(label);
+		}
+		System.out.println("Total accuracy = " + (double)totalCorrect/totalOccurrency);
 
 	}
 

@@ -12,6 +12,8 @@ import org.apache.lucene.analysis.tokenattributes.TermAttribute;
 import org.apache.mahout.math.Vector;
 import org.apache.mahout.vectorizer.encoders.ContinuousValueEncoder;
 
+import com.zuehlke.reuters.mahout.ReutersMessage;
+
 public class TFIDFFeature extends AbstractFeature {
 	
 	private static final String WORD_COUNT_FILE = "wordCount.txt";
@@ -26,11 +28,11 @@ public class TFIDFFeature extends AbstractFeature {
 		}
 	}
 
-	public void extract( String text, Vector vector ) {
+	public void extract( ReutersMessage message, Vector vector ) {
 		ContinuousValueEncoder encoder = new ContinuousValueEncoder("td-idf");
 		Map<String, Integer> wordCounts = new HashMap<String, Integer>();
 		
-		StringReader in = new StringReader( text );
+		StringReader in = new StringReader( message.getBody() );
 		TokenStream ts = analyzer.tokenStream("body", in);
 		TermAttribute termAtt = ts.addAttribute(TermAttribute.class);
 
