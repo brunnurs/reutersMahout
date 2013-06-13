@@ -38,4 +38,8 @@ public class FeatureCollector {
 	public int getFeatureCount() {
 		return VECTOR_SIZE;
 	}
+
+	public Vector extractFeatures(String text) {
+		return extractFeatures(new ReutersMessage(null, null, text));
+	}
 }
