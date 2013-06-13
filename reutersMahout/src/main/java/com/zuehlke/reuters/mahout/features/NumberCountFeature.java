@@ -22,7 +22,7 @@ public class NumberCountFeature extends AbstractFeature {
 		try {
 			while (ts.incrementToken()) {
 				TypeAttribute type = ts.getAttribute(TypeAttribute.class);
-				if (type != null && "<NUM>".equals(type.type())) {
+				if (type != null && "<NUM>".equals(type.type()) && !isYear(termAtt.termBuffer())) {
 					char[] termBuffer = termAtt.termBuffer();
 					int termLen = termAtt.termLength();
 					String w = new String(termBuffer, 0, termLen);
@@ -32,6 +32,14 @@ public class NumberCountFeature extends AbstractFeature {
 		} catch (IOException e) {
 			System.out.println("IOError: " + NumberCountFeature.class);
 		}
+	}
+
+	private boolean isYear(char[] termBuffer) {
+		if (termBuffer.length==4 && (
+									(termBuffer[0]=='1' && termBuffer[1]=='9') ||
+									(termBuffer[0]=='2' && termBuffer[1]=='0')
+									)) return true;
+		return false;
 	}
 
 }

@@ -14,6 +14,8 @@ public class FeatureCollector {
 		features.add( new NumberCountFeature() );
 		features.add( new WordCountFeature() );
 		features.add( new BiasFeature() );
+		features.add( new CurrencyCountFeature() );
+		features.add( new AdaptativeWordCountFeature() );
 	}
 
 	public FeatureCollector(){

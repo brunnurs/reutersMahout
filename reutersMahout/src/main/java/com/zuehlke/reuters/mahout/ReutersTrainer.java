@@ -18,30 +18,30 @@ public class ReutersTrainer {
 	public static void main(String[] args) throws ParseException, IOException {
 		String dataDir = null;
 		if (args.length == 0) {
-			dataDir = "/home/cloudera/reutersMahout/Data";
+			dataDir = "/home/cloudera/workspace/reuters/reutersMahout/Data";
 		} else {
 			dataDir = args[0];
 		}
 		ReutersMessageImporter importer = new ReutersMessageImporter();
+
 		List<ReutersMessage> messages = importer.importData( new File(dataDir) );
+		importer.printStatistics();
+
 		List<DataPoint> trainingData = new ArrayList<DataPoint>();
 		FeatureCollector featureCollector = new FeatureCollector();
 		
-		for( ReutersMessage message : messages ){
-			if( !message.getTopic().isEmpty() && message.getBody() != null ){
-				Vector features = featureCollector.extractFeatures( message.getBody() );
-				trainingData.add( new DataPoint(features, message.getTopic()));
+		for (ReutersMessage message : messages) {
+			if (!message.getTopic().isEmpty() && message.getBody() != null) {
+				Vector features = featureCollector.extractFeatures(message.getBody());
+				trainingData.add(new DataPoint(features, message.getTopic()));
 			}
 		}
 		
 		Classifier classifier = new LogisticRegression(trainingData);
 		classifier.train();
-		File modelDir = new File("/home/cloudera/models");
+		File modelDir = new File("/home/cloudera/workspace/reuters/reutersMahout/models");
 		modelDir.mkdirs();
 		classifier.writeToFile(modelDir.getAbsolutePath());
-		
-		
-		
 	}
 
 }

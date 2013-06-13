@@ -31,7 +31,7 @@ public class ReutersTopology {
 		config.setNumWorkers(2); //TODO: ???
 		config.setMaxSpoutPending(1); //TODO: ???
 		LocalCluster cluster = new LocalCluster();
-		cluster.submitTopology("reutersTopology", config, buildTopology(new File("/home/cloudera/Desktop/reuters21578-out")));
+		cluster.submitTopology("reutersTopology", config, buildTopology(new File("/tmp/reuters21578-out")));
 		Utils.sleep(10000);
 		cluster.killTopology("reutersTopology");
         cluster.shutdown();

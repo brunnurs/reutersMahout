@@ -4,7 +4,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
@@ -25,17 +27,23 @@ public class ReutersMessageParser extends DefaultHandler
 {
 	protected final static String FILE = "ADDYOURFILEPATH";
 
+	private List<ReutersMessage> allMessages = new ArrayList<ReutersMessage>();
 	
 	private boolean isInReuters;
 	private boolean isInTopics;
 
-	private List<ReutersMessage> allMessages = new ArrayList<ReutersMessage>();
 	
 	private String currentMessageId;
 	private String currentBody;
 	private List<String> currentTopics = new ArrayList<String>();
 	
 	private StringBuffer content = new StringBuffer();
+
+	private TopicStatistic statistic;
+	
+	public ReutersMessageParser(TopicStatistic statistic) {
+		this.statistic = statistic;
+	}
 
 	private void setImporterToXMLReader(XMLReader xmlReader)
 			throws IOException, SAXException, FileNotFoundException {
@@ -89,9 +97,15 @@ public class ReutersMessageParser extends DefaultHandler
 
 	private void createNewReutersMessages() {
 		for (String topic : currentTopics) {
-			allMessages.add(new ReutersMessage(currentMessageId,topic,currentBody));
+			if(currentBody != null && !currentBody.isEmpty()) {
+				ReutersMessage reutersMessage = new ReutersMessage(currentMessageId,topic,currentBody);
+				allMessages.add(reutersMessage);
+				statistic.addToStatistics(reutersMessage);				
+			}
 		}
 	}
+
+
 
 	private void cleanCurrentFields() {
 		currentTopics.clear();
@@ -125,6 +139,4 @@ public class ReutersMessageParser extends DefaultHandler
 			throw new ParseException(e);
 		}
 	}
-	
-
 }

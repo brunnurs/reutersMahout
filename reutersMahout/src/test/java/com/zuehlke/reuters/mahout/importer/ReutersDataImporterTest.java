@@ -17,11 +17,12 @@ public class ReutersDataImporterTest {
 			throws FileNotFoundException, ParseException {
 
 		/* prepare */
-		File dir = new File("/tmp/reuters/");
+		File dir = new File("target/test-classes");
 		ReutersMessageImporter importer = new ReutersMessageImporter();
 
 		/* perform */
 		List<ReutersMessage> parsedMessages = importer.importData(dir);
+		importer.printStatistics();
 
 		/* validate */
 		assertEquals(2, parsedMessages.size());

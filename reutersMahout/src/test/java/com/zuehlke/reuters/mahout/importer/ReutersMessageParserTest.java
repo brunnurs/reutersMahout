@@ -12,7 +12,7 @@ import com.zuehlke.reuters.mahout.ReutersMessage;
 
 public class ReutersMessageParserTest {
 
-	ReutersMessageParser importer = new ReutersMessageParser();
+	ReutersMessageParser importer = new ReutersMessageParser(new TopicStatistic());
 
 	@Test
 	public void testImportReutersSample() throws IOException, ParseException {

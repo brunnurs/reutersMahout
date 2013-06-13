@@ -21,7 +21,7 @@ public class NumberCountFeatureTest {
 		NumberCountFeature feature = new NumberCountFeature();
 		Vector v1 = new RandomAccessSparseVector(10);
 		feature.extract("to 23 two     56 words", v1);
-		assertEquals("{4:1.0,3:1.0,2:1.0,0:1.0}", v1.toString());
+		assertEquals("{6:1.0,5:1.0,4:1.0,2:1.0}", v1.toString());
 	}
 
 }
