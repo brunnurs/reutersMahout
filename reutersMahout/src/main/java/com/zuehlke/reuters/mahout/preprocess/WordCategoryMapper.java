@@ -16,6 +16,8 @@ import com.google.common.collect.Maps;
 import com.zuehlke.reuters.mahout.ReutersMessage;
 
 public class WordCategoryMapper {
+	
+	private static final int NUMBER_TOP_WORDS = 25;
 
 	public Map<String, List<String>> map(List<ReutersMessage> messages) {
 		Map<String, Map<String, Integer>> tmpMap = Maps.newHashMap();
@@ -54,7 +56,7 @@ public class WordCategoryMapper {
 		List<String> list = new ArrayList<String>();
 		
 		List<Entry<String, Integer>> sortedList = new ArrayList<Entry<String, Integer>>(sortedMap.entrySet());
-		int count = 100;
+		int count = NUMBER_TOP_WORDS;
 		for (int i = sortedList.size() - 1; i >= 0 || count >= 0; i--) {
 			Entry<String, Integer> entry = sortedList.get(i);
 			list.add(entry.getKey());
