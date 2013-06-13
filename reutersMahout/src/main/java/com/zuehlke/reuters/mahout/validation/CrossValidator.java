@@ -54,8 +54,7 @@ public class CrossValidator {
 		FeatureCollector featureCollector = new FeatureCollector(categoryWords);
 		for (ReutersMessage message : messages) {
 			if (!message.getTopic().isEmpty() && message.getBody() != null) {
-				Vector features = featureCollector.extractFeatures(message
-						.getBody());
+				Vector features = featureCollector.extractFeatures(message);
 				data.add(new DataPoint(features, message.getTopic()));
 			}
 		}
