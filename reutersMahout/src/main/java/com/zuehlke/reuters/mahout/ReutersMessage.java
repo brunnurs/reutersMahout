@@ -1,7 +1,9 @@
 package com.zuehlke.reuters.mahout;
 
-public class ReutersMessage {
+import java.io.Serializable;
 
+public class ReutersMessage implements Serializable{
+	private static final long serialVersionUID = 1729034073736715522L;
 	private String id;
 	private String topic;
 	private String body;

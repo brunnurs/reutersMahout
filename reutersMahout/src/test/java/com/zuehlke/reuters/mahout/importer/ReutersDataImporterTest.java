@@ -22,7 +22,7 @@ public class ReutersDataImporterTest {
 
 		/* perform */
 		List<ReutersMessage> parsedMessages = importer.importData(dir);
-		importer.printStatistics();
+		importer.getStatistic().printStatistics();
 
 		/* validate */
 		assertEquals(2, parsedMessages.size());

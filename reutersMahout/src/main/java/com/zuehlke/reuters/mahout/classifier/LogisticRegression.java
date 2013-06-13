@@ -15,6 +15,7 @@ import org.apache.mahout.math.Vector;
 
 import com.zuehlke.reuters.mahout.DataPoint;
 import com.zuehlke.reuters.mahout.features.FeatureCollector;
+import com.zuehlke.reuters.mahout.util.CategoriesExtractor;
 
 public class LogisticRegression implements Classifier {
 
@@ -24,7 +25,7 @@ public class LogisticRegression implements Classifier {
 	
 	public LogisticRegression(List<DataPoint> trainingData){
 		this.trainingData = trainingData;
-		extractCategories(trainingData);
+		categories = new CategoriesExtractor().extract(trainingData);
 		learningAlgorithm =
 				new OnlineLogisticRegression(
 				categories.size(), FeatureCollector.VECTOR_SIZE, new L1())
@@ -45,23 +46,14 @@ public class LogisticRegression implements Classifier {
 		OnTheFlyEvaluator onTheFlyEvaluator = new OnTheFlyEvaluator();
 		
 		for(DataPoint dataPoint : trainingData){
-			onTheFlyEvaluator.recalculateMu();
+			//onTheFlyEvaluator.recalculateMu();
 			
 			int category = categories.indexOf(dataPoint.getCategory());
-			String predictedCategory = classify(dataPoint.getFeatures());
+			//String predictedCategory = classify(dataPoint.getFeatures());
 
-			onTheFlyEvaluator.calculateAndPrintCorrectness(predictedCategory, dataPoint.getCategory());
+			//onTheFlyEvaluator.calculateAndPrintCorrectness(predictedCategory, dataPoint.getCategory());
 			
 			learningAlgorithm.train(category, dataPoint.getFeatures());
-		}
-	}
-
-	private void extractCategories(List<DataPoint> trainingData) {
-		categories = new ArrayList<String>();
-		for(DataPoint dataPoint : trainingData){
-			if(!categories.contains(dataPoint.getCategory())){
-				categories.add(dataPoint.getCategory());
-			}
 		}
 	}
 
