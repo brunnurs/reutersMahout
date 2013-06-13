@@ -11,7 +11,6 @@ import com.zuehlke.reuters.mahout.classifier.Classifier;
 import com.zuehlke.reuters.mahout.classifier.LogisticRegression;
 import com.zuehlke.reuters.mahout.features.FeatureCollector;
 import com.zuehlke.reuters.mahout.importer.ParseException;
-import com.zuehlke.reuters.mahout.importer.ReutersMessageImporter;
 
 public class ReutersTrainer {
 
@@ -22,10 +21,8 @@ public class ReutersTrainer {
 		} else {
 			dataDir = args[0];
 		}
-		ReutersMessageImporter importer = new ReutersMessageImporter();
-
-		List<ReutersMessage> messages = importer.importData( new File(dataDir) );
-		importer.printStatistics();
+		
+		List<ReutersMessage> messages = new MessageExtractor().extract(dataDir);
 
 		List<DataPoint> trainingData = new ArrayList<DataPoint>();
 		FeatureCollector featureCollector = new FeatureCollector();
