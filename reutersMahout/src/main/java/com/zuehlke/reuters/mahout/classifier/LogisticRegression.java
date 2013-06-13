@@ -29,10 +29,10 @@ public class LogisticRegression implements Classifier {
 		learningAlgorithm =
 				new OnlineLogisticRegression(
 				categories.size(), FeatureCollector.VECTOR_SIZE, new L1())
-				.alpha(1).stepOffset(1000)
-				.decayExponent(0.9)
-				.lambda(3.0e-5)
-				.learningRate(20);
+		.alpha(1).stepOffset(1000)
+		.decayExponent(0.9)
+		.lambda(3.0e-5)
+		.learningRate(20);
 	}
 	
 	private LogisticRegression(OnlineLogisticRegression learningAlgorithm, List<String> categories){
