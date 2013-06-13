@@ -1,7 +1,7 @@
 package com.zuehlke.reuters.mahout;
 
 import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +15,7 @@ import com.zuehlke.reuters.mahout.importer.ReutersMessageImporter;
 
 public class ReutersTrainer {
 
-	public static void main(String[] args) throws FileNotFoundException, ParseException {
+	public static void main(String[] args) throws ParseException, IOException {
 		ReutersMessageImporter importer = new ReutersMessageImporter();
 		List<ReutersMessage> messages = importer.importData( new File(args[0]) );
 		List<DataPoint> trainingData = new ArrayList<DataPoint>();
@@ -30,6 +30,7 @@ public class ReutersTrainer {
 		
 		Classifier classifier = new LogisticRegression(trainingData);
 		classifier.train();
+		classifier.writeToFile("/home/cloudera/models");
 		
 	}
 
