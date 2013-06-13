@@ -2,6 +2,8 @@ package com.zuehlke.reuters.mahout.features;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.TermAttribute;
@@ -10,6 +12,12 @@ import org.apache.mahout.vectorizer.encoders.FeatureVectorEncoder;
 import org.apache.mahout.vectorizer.encoders.StaticWordValueEncoder;
 
 public class WordCountFeature extends AbstractFeature {
+
+	private Map<String, List<String>> categoryWords;
+
+	public WordCountFeature(Map<String, List<String>> categoryWords) {
+		this.categoryWords = categoryWords;
+	}
 
 	public void extract(String text, Vector vector) {
 		FeatureVectorEncoder encoder = new StaticWordValueEncoder("static word"); 
