@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.mahout.classifier.sgd.L1;
@@ -25,6 +27,7 @@ public class LogisticRegression implements Classifier {
 	
 	public LogisticRegression(List<DataPoint> trainingData){
 		this.trainingData = trainingData;
+		Collections.shuffle(this.trainingData);
 		categories = new CategoriesExtractor().extract(trainingData);
 		learningAlgorithm =
 				new OnlineLogisticRegression(
@@ -46,12 +49,17 @@ public class LogisticRegression implements Classifier {
 		OnTheFlyEvaluator onTheFlyEvaluator = new OnTheFlyEvaluator();
 		
 		for(DataPoint dataPoint : trainingData){
-			onTheFlyEvaluator.recalculateMu();
+//			onTheFlyEvaluator.recalculateMu();
 			
-			int category = categories.indexOf(dataPoint.getCategory());
+			String actualCategory = dataPoint.getCategory();
+			int category = categories.indexOf(actualCategory);
 			String predictedCategory = classify(dataPoint.getFeatures());
 
-			onTheFlyEvaluator.calculateAndPrintCorrectness(predictedCategory, dataPoint.getCategory());
+//			System.out.println("actual: " + actualCategory);
+//			System.out.println("predicted: " + predictedCategory);
+			
+			
+//			onTheFlyEvaluator.calculateAndPrintCorrectness(predictedCategory, actualCategory);
 			learningAlgorithm.train(category, dataPoint.getFeatures());
 		}
 	}
@@ -59,7 +67,8 @@ public class LogisticRegression implements Classifier {
 	@Override
 	public String classify(Vector features) {
 		Vector classify = learningAlgorithm.classifyFull(features);
-		return categories.get(classify.maxValueIndex());
+		int maxValueIndex = classify.maxValueIndex();
+		return categories.get(maxValueIndex);
 	}
 
 	@Override
