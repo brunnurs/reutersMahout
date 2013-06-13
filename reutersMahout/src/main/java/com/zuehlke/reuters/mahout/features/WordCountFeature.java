@@ -28,7 +28,8 @@ public class WordCountFeature extends AbstractFeature {
 		TokenStream ts = analyzer.tokenStream("body", in);
 		TermAttribute termAtt = ts.addAttribute(TermAttribute.class);
 
-		List<String> topWords = categoryWords.get(message.getTopic());
+		String category = message.getTopic();
+		List<String> topWords = categoryWords.get(category);
 		try {
 			while (ts.incrementToken()) {
 			  char[] termBuffer = termAtt.termBuffer();

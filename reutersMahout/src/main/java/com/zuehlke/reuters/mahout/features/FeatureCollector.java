@@ -12,22 +12,18 @@ import com.zuehlke.reuters.mahout.ReutersMessage;
 
 public class FeatureCollector {
 	public static final int VECTOR_SIZE = 1;
-	private static Set<Feature> features = new HashSet<Feature>();
-	private static Map<String, List<String>> categoryWords;
+	private Set<Feature> features = new HashSet<Feature>();
+	private Map<String, List<String>> categoryWords;
 	
-	static{
-		features.add( new NumberCountFeature() );
-		features.add( new WordCountFeature(categoryWords) );
-		features.add( new BiasFeature() );
-		features.add( new CurrencyCountFeature() );
-		features.add( new AdaptativeWordCountFeature() );
-	}
 
 	public FeatureCollector(Map<String, List<String>> categoryWords){
 		this.categoryWords = categoryWords;
 	}
 	
 	public Vector extractFeatures(ReutersMessage message){
+		
+		addFeatures();
+		
 		Vector vector = new RandomAccessSparseVector(VECTOR_SIZE);
 		for(Feature feature : features){
 			feature.extract(message, vector);
@@ -35,6 +31,14 @@ public class FeatureCollector {
 		return vector;
 	}
 	
+	private void addFeatures() {
+		features.add( new NumberCountFeature() );
+		features.add( new WordCountFeature(categoryWords) );
+		features.add( new BiasFeature() );
+		features.add( new CurrencyCountFeature() );
+		features.add( new AdaptativeWordCountFeature() );
+	}
+
 	public int getFeatureCount() {
 		return VECTOR_SIZE;
 	}
