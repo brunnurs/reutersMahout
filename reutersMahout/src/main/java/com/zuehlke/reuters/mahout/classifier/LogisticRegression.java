@@ -37,8 +37,17 @@ public class LogisticRegression implements Classifier {
 	
 	@Override
 	public void train() {
+
+		OnTheFlyEvaluator onTheFlyEvaluator = new OnTheFlyEvaluator();
+		
 		for(DataPoint dataPoint : trainingData){
+			onTheFlyEvaluator.recalculateMu();
+			
 			int category = categories.indexOf(dataPoint.getCategory());
+			String predictedCategory = classify(dataPoint.getFeatures());
+
+			onTheFlyEvaluator.calculateAndPrintCorrectness(predictedCategory, dataPoint.getCategory());
+			
 			learningAlgorithm.train(category, dataPoint.getFeatures());
 		}
 	}
