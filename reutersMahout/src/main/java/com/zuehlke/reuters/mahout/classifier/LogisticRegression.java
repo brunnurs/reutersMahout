@@ -46,13 +46,12 @@ public class LogisticRegression implements Classifier {
 		OnTheFlyEvaluator onTheFlyEvaluator = new OnTheFlyEvaluator();
 		
 		for(DataPoint dataPoint : trainingData){
-			//onTheFlyEvaluator.recalculateMu();
+			onTheFlyEvaluator.recalculateMu();
 			
 			int category = categories.indexOf(dataPoint.getCategory());
-			//String predictedCategory = classify(dataPoint.getFeatures());
+			String predictedCategory = classify(dataPoint.getFeatures());
 
-			//onTheFlyEvaluator.calculateAndPrintCorrectness(predictedCategory, dataPoint.getCategory());
-			
+			onTheFlyEvaluator.calculateAndPrintCorrectness(predictedCategory, dataPoint.getCategory());
 			learningAlgorithm.train(category, dataPoint.getFeatures());
 		}
 	}

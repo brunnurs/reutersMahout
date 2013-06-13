@@ -15,7 +15,7 @@ public class FeatureCollector {
 	
 	static{
 		features.add( new NumberCountFeature() );
-		features.add( new WordCountFeature(categoryWords) );
+//		features.add( new WordCountFeature(categoryWords) );
 		features.add( new BiasFeature() );
 		features.add( new CurrencyCountFeature() );
 		features.add( new AdaptativeWordCountFeature() );
