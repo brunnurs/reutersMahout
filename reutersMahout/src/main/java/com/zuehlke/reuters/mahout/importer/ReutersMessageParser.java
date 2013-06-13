@@ -10,6 +10,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import org.apache.commons.lang3.StringUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -78,7 +79,7 @@ public class ReutersMessageParser extends DefaultHandler
 		} else if(isInReuters && qName.equalsIgnoreCase("TOPICS")) {
 			isInTopics = false;
 		} else if(isInTopics && qName.equalsIgnoreCase("D")) {
-			currentTopics.add(content.toString());
+			currentTopics.add(StringUtils.trim(content.toString()));
 		} else if(isInReuters && qName.equalsIgnoreCase("BODY")) {
 			currentBody = content.toString();
 		}

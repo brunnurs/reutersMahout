@@ -2,6 +2,7 @@ package com.zuehlke.reuters.storm;
 
 import java.io.File;
 
+import com.zuehlke.reuters.storm.bolt.ClassifierBolt;
 import com.zuehlke.reuters.storm.bolt.ExtractionBolt;
 import com.zuehlke.reuters.storm.spout.DocumentSpout;
 

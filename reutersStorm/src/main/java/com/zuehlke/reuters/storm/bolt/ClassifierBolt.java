@@ -1,4 +1,4 @@
-package com.zuehlke.reuters.storm;
+package com.zuehlke.reuters.storm.bolt;
 
 import java.io.IOException;
 import java.util.Map;
