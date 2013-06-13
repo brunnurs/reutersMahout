@@ -12,7 +12,7 @@ import org.apache.mahout.vectorizer.encoders.StaticWordValueEncoder;
 public class WordCountFeature extends AbstractFeature {
 
 	public void extract(String text, Vector vector) {
-		FeatureVectorEncoder encoder = new StaticWordValueEncoder("text"); 
+		FeatureVectorEncoder encoder = new StaticWordValueEncoder("static word"); 
 
 		StringReader in = new StringReader(text);
 		TokenStream ts = analyzer.tokenStream("body", in);

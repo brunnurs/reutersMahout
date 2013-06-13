@@ -12,7 +12,7 @@ import org.apache.mahout.vectorizer.encoders.FeatureVectorEncoder;
 public class AdaptativeWordCountFeature extends AbstractFeature {
 
 	public void extract(String text, Vector vector) {
-		FeatureVectorEncoder encoder = new AdaptiveWordValueEncoder("text"); 
+		FeatureVectorEncoder encoder = new AdaptiveWordValueEncoder("adaptive words"); 
 
 		StringReader in = new StringReader(text);
 		TokenStream ts = analyzer.tokenStream("body", in);

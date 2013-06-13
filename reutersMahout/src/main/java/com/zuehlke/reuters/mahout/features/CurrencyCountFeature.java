@@ -9,7 +9,7 @@ public class CurrencyCountFeature extends AbstractFeature {
 
 	public void extract(String text, Vector vector) {
 		
-		FeatureVectorEncoder encoder = new StaticWordValueEncoder("text");
+		FeatureVectorEncoder encoder = new StaticWordValueEncoder("Currency");
 		
 		countSymbol(text, "£", vector, encoder);
 		countSymbol(text, "€", vector, encoder);
