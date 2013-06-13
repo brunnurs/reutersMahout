@@ -17,7 +17,6 @@ public class FeatureCollector {
 	}
 
 	public FeatureCollector(){
-		features = new HashSet<Feature>();
 	}
 	
 	public Vector extractFeatures(String text){
