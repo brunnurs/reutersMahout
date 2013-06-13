@@ -56,23 +56,26 @@ public class CrossValidator {
 			}
 		}
 
+		List<String> categories = new CategoriesExtractor().extract(data);
+		ConfusionMatrix overallMatrix = new ConfusionMatrix(categories, "unknown");
 		List<ConfusionMatrix> confusionMatrixes = new ArrayList<ConfusionMatrix>();
 		for (int i = 0; i < runs; i++) {
-			confusionMatrixes.add(execute(data, validationDataSize, i));
+			confusionMatrixes.add(execute(data, validationDataSize, i, categories, overallMatrix));
 		}
+		
+		/*
 		System.out
 				.println("#####################################################");
 		for (ConfusionMatrix cf : confusionMatrixes) {
 			System.out.println(new ConfusionMatrixFormatter(cf).withMatrix());
 			System.out
 					.println("#####################################################");
-		}
+		}*/
 
 	}
 
 	private ConfusionMatrix execute(List<DataPoint> data,
-			int validationDataSize, int run) {
-		List<String> categories = new CategoriesExtractor().extract(data);
+			int validationDataSize, int run, List<String> categories, ConfusionMatrix overallMatrix) {
 		int validationDataStart = validationDataSize * run;
 		int validationDataEnd = validationDataSize * (run + 1);
 		LOG.info("Run {}. Validation data {}-{}", new Object[] { run,
@@ -98,6 +101,7 @@ public class CrossValidator {
 			String expectedTarget = dp.getCategory();
 			String actualTarget = classifier.classify(dp.getFeatures());
 			confusionMatrix.addInstance(expectedTarget, actualTarget);
+			overallMatrix.addInstance(expectedTarget, actualTarget);
 		}
 		if (logConfusionMatrix) {
 			System.out.println(new ConfusionMatrixFormatter(confusionMatrix)
