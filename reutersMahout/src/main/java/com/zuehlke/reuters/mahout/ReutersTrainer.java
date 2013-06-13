@@ -16,8 +16,14 @@ import com.zuehlke.reuters.mahout.importer.ReutersMessageImporter;
 public class ReutersTrainer {
 
 	public static void main(String[] args) throws ParseException, IOException {
+		String dataDir = null;
+		if (args.length == 0) {
+			dataDir = "/home/cloudera/reutersMahout/Data";
+		} else {
+			dataDir = args[0];
+		}
 		ReutersMessageImporter importer = new ReutersMessageImporter();
-		List<ReutersMessage> messages = importer.importData( new File(args[0]) );
+		List<ReutersMessage> messages = importer.importData( new File(dataDir) );
 		List<DataPoint> trainingData = new ArrayList<DataPoint>();
 		FeatureCollector featureCollector = new FeatureCollector();
 		
@@ -30,7 +36,11 @@ public class ReutersTrainer {
 		
 		Classifier classifier = new LogisticRegression(trainingData);
 		classifier.train();
-		classifier.writeToFile("/home/cloudera/models");
+		File modelDir = new File("/home/cloudera/models");
+		modelDir.mkdirs();
+		classifier.writeToFile(modelDir.getAbsolutePath());
+		
+		
 		
 	}
 
