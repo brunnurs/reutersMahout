@@ -32,20 +32,11 @@ public class ReutersMessageImporter {
 			
 			return result;
 		} else {
-			ReutersMessageParser parser = new ReutersMessageParser(statistic);
+			ReutersMessageParser parser = new ReutersMessageParser(getStatistic());
 			return parser.parseData(new FileInputStream(directory));
 		}
 	}
 	
-	public void printStatistics() {
-		
-		MapUtil mapUtil = new MapUtil();
-		Map<String, Integer> sortedMap = mapUtil.sortByValue(statistic.getCategoryStatistics());
-		
-		for (String key : sortedMap.keySet()) {
-			System.out.println("Topic: "+key + " Count:"+sortedMap.get(key));
-		}
-	}
 
 	private File[] getFilesByExtension(File directory) {
 		File[] files = directory.listFiles(new FilenameFilter() {
@@ -56,28 +47,7 @@ public class ReutersMessageImporter {
 		return files;
 	}
 	
-	class MapUtil
-	{
-	    public <K, V extends Comparable<? super V>> Map<K, V> 
-	        sortByValue( Map<K, V> map )
-	    {
-	        List<Map.Entry<K, V>> list =
-	            new LinkedList<Map.Entry<K, V>>( map.entrySet() );
-	        Collections.sort( list, new Comparator<Map.Entry<K, V>>()
-	        {
-	            public int compare( Map.Entry<K, V> o1, Map.Entry<K, V> o2 )
-	            {
-	                return (o1.getValue()).compareTo( o2.getValue() );
-	            }
-	        } );
-
-	        Map<K, V> result = new LinkedHashMap<K, V>();
-	        for (Map.Entry<K, V> entry : list)
-	        {
-	            result.put( entry.getKey(), entry.getValue() );
-	        }
-	        return result;
-	    }
+	public TopicStatistic getStatistic() {
+		return statistic;
 	}
-
 }
