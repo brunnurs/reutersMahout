@@ -25,11 +25,9 @@ public class ReutersTrainer {
 		List<ReutersMessage> messages = new MessageExtractor().extract(dataDir);
 
 		List<DataPoint> trainingData = new ArrayList<DataPoint>();
-		FeatureCollector featureCollector = new FeatureCollector();
-		
 		for (ReutersMessage message : messages) {
 			if (!message.getTopic().isEmpty() && message.getBody() != null) {
-				Vector features = featureCollector.extractFeatures(message.getBody());
+				Vector features = new FeatureCollector().extractFeatures(message.getBody());
 				trainingData.add(new DataPoint(features, message.getTopic()));
 			}
 		}
