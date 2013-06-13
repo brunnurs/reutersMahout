@@ -8,7 +8,7 @@ import org.apache.mahout.math.Vector;
 
 public class FeatureCollector {
 	private static final int VECTOR_SIZE = 1000;
-	private static Set<Feature> features;
+	private static Set<Feature> features = new HashSet<Feature>();
 	
 	static{
 		features.add( new NumberCountFeature() );
