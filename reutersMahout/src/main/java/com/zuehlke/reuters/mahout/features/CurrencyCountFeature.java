@@ -14,6 +14,7 @@ public class CurrencyCountFeature extends AbstractFeature {
 		countSymbol(text, "£", vector, encoder);
 		countSymbol(text, "€", vector, encoder);
 		countSymbol(text, "¥", vector, encoder);
+		countSymbol(text, "pct", vector, encoder);
 			
 	}
 
