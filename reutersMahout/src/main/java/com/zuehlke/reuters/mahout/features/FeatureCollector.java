@@ -13,16 +13,17 @@ import com.zuehlke.reuters.mahout.ReutersMessage;
 public class FeatureCollector {
 	public static final int VECTOR_SIZE = 1;
 	private Set<Feature> features = new HashSet<Feature>();
-	private Map<String, List<String>> categoryWords;
 	
 
 	public FeatureCollector(Map<String, List<String>> categoryWords){
-		this.categoryWords = categoryWords;
+		features.add( new NumberCountFeature() );
+		features.add( new WordCountFeature(categoryWords) );
+		features.add( new BiasFeature() );
+		features.add( new CurrencyCountFeature() );
+		features.add( new AdaptativeWordCountFeature() );
 	}
 	
 	public Vector extractFeatures(ReutersMessage message){
-		
-		addFeatures();
 		
 		Vector vector = new RandomAccessSparseVector(VECTOR_SIZE);
 		for(Feature feature : features){
@@ -31,14 +32,6 @@ public class FeatureCollector {
 		return vector;
 	}
 	
-	private void addFeatures() {
-		features.add( new NumberCountFeature() );
-		features.add( new WordCountFeature(categoryWords) );
-		features.add( new BiasFeature() );
-		features.add( new CurrencyCountFeature() );
-		features.add( new AdaptativeWordCountFeature() );
-	}
-
 	public int getFeatureCount() {
 		return VECTOR_SIZE;
 	}

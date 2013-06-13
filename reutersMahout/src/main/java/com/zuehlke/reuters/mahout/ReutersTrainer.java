@@ -27,6 +27,7 @@ public class ReutersTrainer {
 		List<ReutersMessage> messages = new MessageExtractor().extract(dataDir);
 		Map<String, List<String>> categoryWords = new WordCategoryMapper().map(messages);
 
+		System.out.println("-- Extract features");
 		List<DataPoint> trainingData = new ArrayList<DataPoint>();
 		for (ReutersMessage message : messages) {
 			if (!message.getTopic().isEmpty() && message.getBody() != null) {
@@ -34,6 +35,8 @@ public class ReutersTrainer {
 				trainingData.add(new DataPoint(features, message.getTopic()));
 			}
 		}
+		
+		System.out.println("-- Train");
 		
 		Classifier classifier = new LogisticRegression(trainingData);
 		classifier.train();
