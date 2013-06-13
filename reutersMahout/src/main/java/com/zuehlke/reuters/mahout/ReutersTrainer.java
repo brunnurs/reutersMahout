@@ -30,7 +30,7 @@ public class ReutersTrainer {
 		List<DataPoint> trainingData = new ArrayList<DataPoint>();
 		for (ReutersMessage message : messages) {
 			if (!message.getTopic().isEmpty() && message.getBody() != null) {
-				Vector features = new FeatureCollector(categoryWords).extractFeatures(message.getBody());
+				Vector features = new FeatureCollector(categoryWords).extractFeatures(message);
 				trainingData.add(new DataPoint(features, message.getTopic()));
 			}
 		}

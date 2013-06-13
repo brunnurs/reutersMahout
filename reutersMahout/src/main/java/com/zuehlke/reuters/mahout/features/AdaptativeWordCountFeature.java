@@ -9,12 +9,14 @@ import org.apache.mahout.math.Vector;
 import org.apache.mahout.vectorizer.encoders.AdaptiveWordValueEncoder;
 import org.apache.mahout.vectorizer.encoders.FeatureVectorEncoder;
 
+import com.zuehlke.reuters.mahout.ReutersMessage;
+
 public class AdaptativeWordCountFeature extends AbstractFeature {
 
-	public void extract(String text, Vector vector) {
+	public void extract(ReutersMessage message, Vector vector) {
 		FeatureVectorEncoder encoder = new AdaptiveWordValueEncoder("adaptive words"); 
 
-		StringReader in = new StringReader(text);
+		StringReader in = new StringReader(message.getBody());
 		TokenStream ts = analyzer.tokenStream("body", in);
 		TermAttribute termAtt = ts.addAttribute(TermAttribute.class);
 
