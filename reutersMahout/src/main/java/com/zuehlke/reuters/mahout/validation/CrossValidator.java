@@ -1,9 +1,9 @@
 package com.zuehlke.reuters.mahout.validation;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import org.apache.mahout.classifier.ConfusionMatrix;
@@ -12,12 +12,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.zuehlke.reuters.mahout.DataPoint;
+import com.zuehlke.reuters.mahout.MessageExtractor;
 import com.zuehlke.reuters.mahout.ReutersMessage;
 import com.zuehlke.reuters.mahout.classifier.Classifier;
 import com.zuehlke.reuters.mahout.classifier.LogisticRegression;
 import com.zuehlke.reuters.mahout.features.FeatureCollector;
 import com.zuehlke.reuters.mahout.importer.ParseException;
-import com.zuehlke.reuters.mahout.importer.ReutersMessageImporter;
+import com.zuehlke.reuters.mahout.preprocess.WordCategoryMapper;
 import com.zuehlke.reuters.mahout.util.CategoriesExtractor;
 
 public class CrossValidator {
@@ -47,7 +48,9 @@ public class CrossValidator {
 				new Object[] { validationDataPercentage, messages.size(),
 						validationDataSize, runs });
 
-		FeatureCollector featureCollector = new FeatureCollector(null);
+		Map<String, List<String>> categoryWords = new WordCategoryMapper()
+				.map(messages);
+		FeatureCollector featureCollector = new FeatureCollector(categoryWords);
 		for (ReutersMessage message : messages) {
 			if (!message.getTopic().isEmpty() && message.getBody() != null) {
 				Vector features = featureCollector.extractFeatures(message
@@ -57,25 +60,29 @@ public class CrossValidator {
 		}
 
 		List<String> categories = new CategoriesExtractor().extract(data);
-		ConfusionMatrix overallMatrix = new ConfusionMatrix(categories, "unknown");
+		ConfusionMatrix overallMatrix = new ConfusionMatrix(categories,
+				"unknown");
 		List<ConfusionMatrix> confusionMatrixes = new ArrayList<ConfusionMatrix>();
 		for (int i = 0; i < runs; i++) {
-			confusionMatrixes.add(execute(data, validationDataSize, i, categories, overallMatrix));
+			confusionMatrixes.add(execute(data, validationDataSize, i,
+					categories, overallMatrix));
 		}
-		
+
 		/*
-		System.out
-				.println("#####################################################");
-		for (ConfusionMatrix cf : confusionMatrixes) {
-			System.out.println(new ConfusionMatrixFormatter(cf).withMatrix());
-			System.out
-					.println("#####################################################");
-		}*/
+		 * System.out
+		 * .println("#####################################################");
+		 * for (ConfusionMatrix cf : confusionMatrixes) { System.out.println(new
+		 * ConfusionMatrixFormatter(cf).withMatrix()); System.out
+		 * .println("#####################################################"); }
+		 */
+		System.out.println(new ConfusionMatrixFormatter(overallMatrix)
+				.withMatrix().withAccurency());
 
 	}
 
 	private ConfusionMatrix execute(List<DataPoint> data,
-			int validationDataSize, int run, List<String> categories, ConfusionMatrix overallMatrix) {
+			int validationDataSize, int run, List<String> categories,
+			ConfusionMatrix overallMatrix) {
 		int validationDataStart = validationDataSize * run;
 		int validationDataEnd = validationDataSize * (run + 1);
 		LOG.info("Run {}. Validation data {}-{}", new Object[] { run,
@@ -104,8 +111,7 @@ public class CrossValidator {
 			overallMatrix.addInstance(expectedTarget, actualTarget);
 		}
 		if (logConfusionMatrix) {
-			System.out.println(new ConfusionMatrixFormatter(confusionMatrix)
-					.withMatrix().withAccurency());
+			System.out.println(new ConfusionMatrixFormatter(confusionMatrix).withAccurency());
 		}
 		return confusionMatrix;
 
@@ -114,13 +120,11 @@ public class CrossValidator {
 	public static void main(String[] args) throws ParseException, IOException {
 		String dataDir = null;
 		if (args.length == 0) {
-			dataDir = "/home/cloudera/reutersMahout/Data";
+			dataDir = "/home/cloudera/workspace/reuters/reutersMahout/Data";
 		} else {
 			dataDir = args[0];
 		}
-		ReutersMessageImporter importer = new ReutersMessageImporter();
-		List<ReutersMessage> messages = importer.importData(new File(dataDir));
-
+		List<ReutersMessage> messages = new MessageExtractor().extract(dataDir);
 		new CrossValidator(0.1).execute(messages);
 	}
 }

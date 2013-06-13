@@ -9,16 +9,16 @@ import org.apache.mahout.math.RandomAccessSparseVector;
 import org.apache.mahout.math.Vector;
 
 public class FeatureCollector {
-	public static final int VECTOR_SIZE = 1000;
+	public static final int VECTOR_SIZE = 1;
 	private static Set<Feature> features = new HashSet<Feature>();
 	private static Map<String, List<String>> categoryWords;
 	
 	static{
-		features.add( new NumberCountFeature() );
+//		features.add( new NumberCountFeature() );
 //		features.add( new WordCountFeature(categoryWords) );
 		features.add( new BiasFeature() );
-		features.add( new CurrencyCountFeature() );
-		features.add( new AdaptativeWordCountFeature() );
+//		features.add( new CurrencyCountFeature() );
+//		features.add( new AdaptativeWordCountFeature() );
 	}
 
 	public FeatureCollector(Map<String, List<String>> categoryWords){

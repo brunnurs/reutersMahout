@@ -58,7 +58,7 @@ public class LogisticRegression implements Classifier {
 
 	@Override
 	public String classify(Vector features) {
-		Vector classify = learningAlgorithm.classify(features);
+		Vector classify = learningAlgorithm.classifyFull(features);
 		return categories.get(classify.maxValueIndex());
 	}
 
