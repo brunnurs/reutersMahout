@@ -1,7 +1,7 @@
 package com.zuehlke.reuters.mahout;
 
 import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,14 +15,20 @@ import com.zuehlke.reuters.mahout.importer.ReutersMessageImporter;
 
 public class ReutersTrainer {
 
-	public static void main(String[] args) throws FileNotFoundException, ParseException {
+	public static void main(String[] args) throws ParseException, IOException {
+		String dataDir = null;
+		if (args.length == 0) {
+			dataDir = "/home/cloudera/reutersMahout/Data";
+		} else {
+			dataDir = args[0];
+		}
 		ReutersMessageImporter importer = new ReutersMessageImporter();
-		List<ReutersMessage> messages = importer.importData( new File(args[0]) );
+		List<ReutersMessage> messages = importer.importData( new File(dataDir) );
 		List<DataPoint> trainingData = new ArrayList<DataPoint>();
 		FeatureCollector featureCollector = new FeatureCollector();
 		
 		for( ReutersMessage message : messages ){
-			if( !message.getTopic().isEmpty() ){
+			if( !message.getTopic().isEmpty() && message.getBody() != null ){
 				Vector features = featureCollector.extractFeatures( message.getBody() );
 				trainingData.add( new DataPoint(features, message.getTopic()));
 			}
@@ -30,6 +36,11 @@ public class ReutersTrainer {
 		
 		Classifier classifier = new LogisticRegression(trainingData);
 		classifier.train();
+		File modelDir = new File("/home/cloudera/models");
+		modelDir.mkdirs();
+		classifier.writeToFile(modelDir.getAbsolutePath());
+		
+		
 		
 	}
 
