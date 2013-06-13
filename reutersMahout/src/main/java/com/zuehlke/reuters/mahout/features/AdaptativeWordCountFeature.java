@@ -6,13 +6,13 @@ import java.io.StringReader;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.TermAttribute;
 import org.apache.mahout.math.Vector;
+import org.apache.mahout.vectorizer.encoders.AdaptiveWordValueEncoder;
 import org.apache.mahout.vectorizer.encoders.FeatureVectorEncoder;
-import org.apache.mahout.vectorizer.encoders.StaticWordValueEncoder;
 
-public class WordCountFeature extends AbstractFeature {
+public class AdaptativeWordCountFeature extends AbstractFeature {
 
 	public void extract(String text, Vector vector) {
-		FeatureVectorEncoder encoder = new StaticWordValueEncoder("static word"); 
+		FeatureVectorEncoder encoder = new AdaptiveWordValueEncoder("adaptive words"); 
 
 		StringReader in = new StringReader(text);
 		TokenStream ts = analyzer.tokenStream("body", in);
@@ -26,7 +26,7 @@ public class WordCountFeature extends AbstractFeature {
 			  encoder.addToVector(w, 1, vector);                                 
 			}
 		} catch (IOException e) {
-			System.out.println("IOError: " + WordCountFeature.class);
+			System.out.println("IOError: " + AdaptativeWordCountFeature.class);
 		}
 
 	}
