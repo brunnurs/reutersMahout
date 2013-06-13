@@ -2,7 +2,7 @@ package com.zuehlke.reuters.mahout.features;
 
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -16,10 +16,12 @@ import com.zuehlke.reuters.mahout.ReutersMessage;
 
 public class WordCountFeature extends AbstractFeature {
 
-	private Map<String, Set<String>> categoryWords;
+	private Set<String> topWords = new HashSet<String>();
 
 	public WordCountFeature(Map<String, Set<String>> categoryWords) {
-		this.categoryWords = categoryWords;
+		for (Set<String> words : categoryWords.values()) {
+			topWords.addAll(words);
+		}
 	}
 
 	public void extract(ReutersMessage message, Vector vector) {
@@ -29,8 +31,6 @@ public class WordCountFeature extends AbstractFeature {
 		TokenStream ts = analyzer.tokenStream("body", in);
 		TermAttribute termAtt = ts.addAttribute(TermAttribute.class);
 
-		String category = message.getTopic();
-		Set<String> topWords = categoryWords.get(category);
 		try {
 			while (ts.incrementToken()) {
 			  char[] termBuffer = termAtt.termBuffer();
