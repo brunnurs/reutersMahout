@@ -1,7 +1,10 @@
 package com.zuehlke.reuters.mahout.classifier;
 
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,14 +34,24 @@ public class LogisticRegression implements Classifier {
 				.learningRate(20);
 	}
 	
-	private LogisticRegression(OnlineLogisticRegression learningAlgorithm){
+	private LogisticRegression(OnlineLogisticRegression learningAlgorithm, List<String> categories){
 		this.learningAlgorithm = learningAlgorithm;
+		this.categories = categories;
 	}
 	
 	@Override
 	public void train() {
+
+		OnTheFlyEvaluator onTheFlyEvaluator = new OnTheFlyEvaluator();
+		
 		for(DataPoint dataPoint : trainingData){
+			onTheFlyEvaluator.recalculateMu();
+			
 			int category = categories.indexOf(dataPoint.getCategory());
+			String predictedCategory = classify(dataPoint.getFeatures());
+
+			onTheFlyEvaluator.calculateAndPrintCorrectness(predictedCategory, dataPoint.getCategory());
+			
 			learningAlgorithm.train(category, dataPoint.getFeatures());
 		}
 	}
@@ -59,13 +72,23 @@ public class LogisticRegression implements Classifier {
 	}
 
 	@Override
-	public void safeToFile(String path) throws IOException {
-		ModelSerializer.writeBinary(path, learningAlgorithm);
+	public void writeToFile(String path) throws IOException {
+		ModelSerializer.writeBinary(path + "/lrmodel", learningAlgorithm);
+		FileOutputStream fileOut =  new FileOutputStream(path + "/classes");
+	    ObjectOutputStream out =  new ObjectOutputStream(fileOut);
+	    out.writeObject(categories);
+	    out.flush();
+	    out.close();
 	}
 
-	public static Classifier loadFromFile(String path) throws IOException {
-		OnlineLogisticRegression model = ModelSerializer.readBinary(new FileInputStream(path), OnlineLogisticRegression.class);
-		LogisticRegression classifier = new LogisticRegression(model);
+	public static Classifier loadFromFile(String path) throws IOException, ClassNotFoundException {
+		OnlineLogisticRegression model = ModelSerializer.readBinary(new FileInputStream(path + "/lrmodel"), OnlineLogisticRegression.class);
+		 FileInputStream fileIn = new FileInputStream(path + "/classes");
+	    ObjectInputStream in = new ObjectInputStream(fileIn);
+		@SuppressWarnings("unchecked")
+		List<String> categories = (ArrayList<String>) in.readObject();
+		LogisticRegression classifier = new LogisticRegression(model, categories);
+		in.close();
 		return classifier;
 	}
 }
