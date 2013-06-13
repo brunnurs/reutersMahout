@@ -35,16 +35,16 @@ public class ClassifierBolt extends BaseRichBolt {
 	}
 
 	public void execute(Tuple input) {
-		String text = input.getString(0);
+		String text = input.getString(1);
 		FeatureCollector featureCollector = new FeatureCollector();
 		Vector featureVector = featureCollector.extractFeatures(text);
 		String textClass = classifier.classify(featureVector);
-		
-		collector.emit(new Values(input.getString(0), textClass));
+		collector.emit(new Values(input.getString(0), textClass, input.getString(2)));
+		collector.ack(input);
 	}
 
 	public void declareOutputFields(OutputFieldsDeclarer declarer) {
-		declarer.declare(new Fields("name", "class"));
+		declarer.declare(new Fields("name", "class", "realClass"));
 	}
 
 }

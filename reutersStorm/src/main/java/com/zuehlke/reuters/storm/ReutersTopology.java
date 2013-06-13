@@ -2,10 +2,6 @@ package com.zuehlke.reuters.storm;
 
 import java.io.File;
 
-import com.zuehlke.reuters.storm.bolt.ClassifierBolt;
-import com.zuehlke.reuters.storm.bolt.ExtractionBolt;
-import com.zuehlke.reuters.storm.spout.DocumentSpout;
-
 import backtype.storm.Config;
 import backtype.storm.LocalCluster;
 import backtype.storm.generated.AlreadyAliveException;
@@ -13,6 +9,12 @@ import backtype.storm.generated.InvalidTopologyException;
 import backtype.storm.generated.StormTopology;
 import backtype.storm.topology.TopologyBuilder;
 import backtype.storm.utils.Utils;
+
+import com.zuehlke.reuters.storm.bolt.ClassifierBolt;
+import com.zuehlke.reuters.storm.bolt.ExtractionBolt;
+import com.zuehlke.reuters.storm.bolt.PrintBolt;
+import com.zuehlke.reuters.storm.spout.DocumentSpout;
+import com.zuehlke.reuters.storm.spout.RawDocumentSpout;
 
 
 public class ReutersTopology {
@@ -25,13 +27,21 @@ public class ReutersTopology {
 		return builder.createTopology();
 	}
 	
+	public static StormTopology buildRawDataTopology(File inputDir){
+		TopologyBuilder builder = new TopologyBuilder();
+		builder.setSpout("document", new RawDocumentSpout(inputDir), 1);
+		builder.setBolt("classifier", new ClassifierBolt(), 1).shuffleGrouping("document");
+		builder.setBolt("print", new PrintBolt(), 1).shuffleGrouping("classifier");
+		return builder.createTopology();
+	}
+	
 	public static void main(String[] args) throws AlreadyAliveException, InvalidTopologyException{
 		Config config = new Config();
-		config.setDebug(true);
-		config.setNumWorkers(2); //TODO: ???
-		config.setMaxSpoutPending(1); //TODO: ???
+		config.setDebug(false);
+		config.setNumWorkers(2);
+		config.setMaxSpoutPending(1);
 		LocalCluster cluster = new LocalCluster();
-		cluster.submitTopology("reutersTopology", config, buildTopology(new File("/home/cloudera/Desktop/reuters21578-out")));
+		cluster.submitTopology("reutersTopology", config, buildRawDataTopology(new File("/home/cloudera/workspace/reutersMahout/Data")));
 		Utils.sleep(10000);
 		cluster.killTopology("reutersTopology");
         cluster.shutdown();

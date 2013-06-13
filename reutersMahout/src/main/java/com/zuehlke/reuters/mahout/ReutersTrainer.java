@@ -17,21 +17,21 @@ public class ReutersTrainer {
 
 	public static void main(String[] args) throws ParseException, IOException {
 		ReutersMessageImporter importer = new ReutersMessageImporter();
-		List<ReutersMessage> messages = importer.importData( new File(args[0]) );
+		List<ReutersMessage> messages = importer.importData(new File(args[0]));
 		List<DataPoint> trainingData = new ArrayList<DataPoint>();
 		FeatureCollector featureCollector = new FeatureCollector();
-		
-		for( ReutersMessage message : messages ){
-			if( !message.getTopic().isEmpty() && message.getBody() != null ){
-				Vector features = featureCollector.extractFeatures( message.getBody() );
-				trainingData.add( new DataPoint(features, message.getTopic()));
+
+		for (ReutersMessage message : messages) {
+			if (!message.getTopic().isEmpty() && message.getBody() != null) {
+				Vector features = featureCollector.extractFeatures(message.getBody());
+				trainingData.add(new DataPoint(features, message.getTopic()));
 			}
 		}
 		
 		Classifier classifier = new LogisticRegression(trainingData);
 		classifier.train();
 		classifier.writeToFile("/home/cloudera/models");
-		
+
 	}
 
 }
