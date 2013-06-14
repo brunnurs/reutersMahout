@@ -2,6 +2,7 @@ package com.zuehlke.reuters.storm.spout;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -12,6 +13,7 @@ import backtype.storm.topology.base.BaseRichSpout;
 import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Values;
 
+import com.zuehlke.reuters.mahout.MessageExtractor;
 import com.zuehlke.reuters.mahout.ReutersMessage;
 import com.zuehlke.reuters.mahout.importer.ParseException;
 import com.zuehlke.reuters.mahout.importer.ReutersMessageImporter;
@@ -24,14 +26,16 @@ public class RawDocumentSpout extends BaseRichSpout {
 	private List<ReutersMessage> messages;
 	
 	public RawDocumentSpout(File folder) {
-		ReutersMessageImporter importer = new ReutersMessageImporter();
 		try {
-			messages = importer.importData(folder);
+			messages = new MessageExtractor().extract(folder.getAbsolutePath());
 		} catch (FileNotFoundException e) {
-			throw new RuntimeException(e);
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		} catch (ParseException e) {
-			throw new RuntimeException(e);
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+		Collections.shuffle(messages);
 		nextMessage = 0;
 	}
 

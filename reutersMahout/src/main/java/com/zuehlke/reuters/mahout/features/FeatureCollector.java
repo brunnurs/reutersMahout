@@ -1,7 +1,6 @@
 package com.zuehlke.reuters.mahout.features;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -12,14 +11,14 @@ import com.zuehlke.reuters.mahout.ReutersMessage;
 
 public class FeatureCollector {
 	public static final int VECTOR_SIZE = 1000;
-	private static Set<Feature> features = new HashSet<Feature>();
+	private Set<Feature> features = new HashSet<Feature>();
 	
 	public FeatureCollector(Map<String, Set<String>> categoryWords){
 		features.add( new NumberCountFeature() );
 		features.add( new WordCountFeature(categoryWords) );
 		features.add( new BiasFeature() );
 		features.add( new CurrencyCountFeature() );
-		features.add( new AdaptativeWordCountFeature() );
+//		features.add( new AdaptativeWordCountFeature() );
 	}
 	
 	public Vector extractFeatures(ReutersMessage message){

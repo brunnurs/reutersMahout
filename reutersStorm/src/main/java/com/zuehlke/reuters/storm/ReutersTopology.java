@@ -11,26 +11,26 @@ import backtype.storm.topology.TopologyBuilder;
 import backtype.storm.utils.Utils;
 
 import com.zuehlke.reuters.storm.bolt.ClassifierBolt;
-import com.zuehlke.reuters.storm.bolt.ExtractionBolt;
 import com.zuehlke.reuters.storm.bolt.PrintBolt;
-import com.zuehlke.reuters.storm.spout.DocumentSpout;
 import com.zuehlke.reuters.storm.spout.RawDocumentSpout;
 
 
 public class ReutersTopology {
-	public static StormTopology buildTopology(File inputDir){
-		TopologyBuilder builder = new TopologyBuilder();
-		builder.setSpout("document", new DocumentSpout(inputDir.listFiles()), 1);
-		builder.setBolt("bodyExtraction", new ExtractionBolt(), 2).shuffleGrouping("document");
-		builder.setBolt("classifier", new ClassifierBolt(), 1).shuffleGrouping("bodyExtraction");
-		
-		return builder.createTopology();
-	}
+	private static int WORKERS = 4;
+
+//	public static StormTopology buildTopology(File inputDir){
+//		TopologyBuilder builder = new TopologyBuilder();
+//		builder.setSpout("document", new DocumentSpout(inputDir.listFiles()), 1);
+//		builder.setBolt("bodyExtraction", new ExtractionBolt(), 2).shuffleGrouping("document");
+//		builder.setBolt("classifier", new ClassifierBolt(), 1).shuffleGrouping("bodyExtraction");
+//		
+//		return builder.createTopology();
+//	}
 	
 	public static StormTopology buildRawDataTopology(File inputDir){
 		TopologyBuilder builder = new TopologyBuilder();
 		builder.setSpout("document", new RawDocumentSpout(inputDir), 1);
-		builder.setBolt("classifier", new ClassifierBolt(), 1).shuffleGrouping("document");
+		builder.setBolt("classifier", new ClassifierBolt(), WORKERS).shuffleGrouping("document");
 		builder.setBolt("print", new PrintBolt(), 1).shuffleGrouping("classifier");
 		return builder.createTopology();
 	}
@@ -38,11 +38,11 @@ public class ReutersTopology {
 	public static void main(String[] args) throws AlreadyAliveException, InvalidTopologyException{
 		Config config = new Config();
 		config.setDebug(false);
-		config.setNumWorkers(2);
+		config.setNumWorkers(WORKERS);
 		config.setMaxSpoutPending(1);
 		LocalCluster cluster = new LocalCluster();
 		cluster.submitTopology("reutersTopology", config, buildRawDataTopology(new File("/home/cloudera/workspace/reutersMahout/Data")));
-		Utils.sleep(10000);
+		Utils.sleep(60000);
 		cluster.killTopology("reutersTopology");
         cluster.shutdown();
 	}

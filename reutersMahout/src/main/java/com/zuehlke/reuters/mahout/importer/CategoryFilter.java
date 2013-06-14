@@ -20,7 +20,7 @@ public class CategoryFilter {
 				toKeep.add(message);
 			}
 		}
-		allMessages.clear();
-		allMessages.addAll(toKeep);
+//		allMessages.clear();
+//		allMessages.addAll(toKeep);
 	}
 }

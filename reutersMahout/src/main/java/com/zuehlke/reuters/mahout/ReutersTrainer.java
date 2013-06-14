@@ -1,7 +1,9 @@
 package com.zuehlke.reuters.mahout;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +29,9 @@ public class ReutersTrainer {
 
 		List<ReutersMessage> messages = new MessageExtractor().extract(dataDir);
 		Map<String, Set<String>> categoryWords = new WordCategoryMapper().map(messages);
+		ObjectOutputStream out =  new ObjectOutputStream(new FileOutputStream("/home/cloudera/workspace/reuters/reutersMahout/models/categoryWords"));
+	    out.writeObject(categoryWords);
+	    out.flush();
 
 		System.out.println("-- Extract features");
 		FeatureCollector featureCollector = new FeatureCollector(categoryWords);

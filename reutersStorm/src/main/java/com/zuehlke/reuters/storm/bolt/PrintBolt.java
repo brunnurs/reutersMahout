@@ -25,6 +25,7 @@ public class PrintBolt extends BaseRichBolt {
 			correctlyCategorizedText++;
 		}
 		categorizedText++;
+		System.out.println(input.getString(1) + ", " + input.getString(2));
 		System.out.println("Accuracy: " + correctlyCategorizedText/categorizedText);
 		
 	}
