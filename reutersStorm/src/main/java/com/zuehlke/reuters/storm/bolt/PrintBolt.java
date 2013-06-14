@@ -2,6 +2,8 @@ package com.zuehlke.reuters.storm.bolt;
 
 import java.util.Map;
 
+import backtype.storm.generated.Bolt;
+import backtype.storm.generated.SpoutSpec;
 import backtype.storm.task.OutputCollector;
 import backtype.storm.task.TopologyContext;
 import backtype.storm.topology.OutputFieldsDeclarer;
@@ -13,8 +15,10 @@ public class PrintBolt extends BaseRichBolt {
 	private OutputCollector collector;
 	private double categorizedText = 0.0;
 	private double correctlyCategorizedText = 0.0;
+	private TopologyContext context;
 
 	public void prepare(@SuppressWarnings("rawtypes") Map stormConf, TopologyContext context, OutputCollector collector) {
+		this.context = context;
 		this.collector = collector;
 	}
 
@@ -25,8 +29,13 @@ public class PrintBolt extends BaseRichBolt {
 			correctlyCategorizedText++;
 		}
 		categorizedText++;
-		System.out.println(input.getString(1) + ", " + input.getString(2));
-		System.out.println("Accuracy: " + correctlyCategorizedText/categorizedText);
+		
+		Map<String, SpoutSpec> spouts = context.getRawTopology().get_spouts();
+		if(spouts.get("document")!=null) {
+			System.out.println("Accuracy: " + correctlyCategorizedText/categorizedText);
+		} else {
+			System.out.println("Text classified as: " + input.getString(1));
+		}
 		
 	}
 

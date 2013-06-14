@@ -1,6 +1,7 @@
 package com.zuehlke.reuters.storm;
 
 import java.io.File;
+import java.util.Scanner;
 
 import backtype.storm.Config;
 import backtype.storm.LocalCluster;
@@ -16,21 +17,26 @@ import com.zuehlke.reuters.storm.spout.RawDocumentSpout;
 
 
 public class ReutersTopology {
+
 	private static int WORKERS = 4;
 
-//	public static StormTopology buildTopology(File inputDir){
-//		TopologyBuilder builder = new TopologyBuilder();
-//		builder.setSpout("document", new DocumentSpout(inputDir.listFiles()), 1);
-//		builder.setBolt("bodyExtraction", new ExtractionBolt(), 2).shuffleGrouping("document");
-//		builder.setBolt("classifier", new ClassifierBolt(), 1).shuffleGrouping("bodyExtraction");
-//		
-//		return builder.createTopology();
-//	}
-	
 	public static StormTopology buildRawDataTopology(File inputDir){
+		Scanner scan = new Scanner(System.in);
+		System.out.println("Select run mode, [1] interactive or [2] batch: ");
+		
 		TopologyBuilder builder = new TopologyBuilder();
-		builder.setSpout("document", new RawDocumentSpout(inputDir), 1);
-		builder.setBolt("classifier", new ClassifierBolt(), WORKERS).shuffleGrouping("document");
+		switch (Integer.parseInt(scan.nextLine())) {
+		case 1:
+			builder.setSpout("keyboard", new KeyboardSpout(), 1);
+			builder.setBolt("classifier", new ClassifierBolt(), WORKERS).shuffleGrouping("keyboard");
+			break;
+
+		default:
+			builder.setSpout("document", new RawDocumentSpout(inputDir), 1);
+			builder.setBolt("classifier", new ClassifierBolt(), WORKERS).shuffleGrouping("document");
+			break;
+		}
+		
 		builder.setBolt("print", new PrintBolt(), 1).shuffleGrouping("classifier");
 		return builder.createTopology();
 	}
